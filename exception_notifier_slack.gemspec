@@ -1,10 +1,10 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'exception_notifier/version'
+require 'exception_notifier_slack/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "exception_notifier_slack"
-  spec.version       = ::ExceptionNotifier::ExceptionNotifierSlack::VERSION
+  spec.version       = ::ExceptionNotifierSlack::VERSION
   spec.authors       = ["Koji Onishi"]
   spec.email         = ["fursich0@gmail.com"]
 

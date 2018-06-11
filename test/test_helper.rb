@@ -1,7 +1,4 @@
-# require "exception_notifier_slack"
-
-# Configure Rails Environment
-ENV["RAILS_ENV"] = "test"
+require "exception_notifier_slack"
 
 # begin
 #   require "coveralls"
@@ -10,16 +7,11 @@ ENV["RAILS_ENV"] = "test"
 #   warn "warning: coveralls gem not found; skipping Coveralls"
 # end
 
-require File.expand_path("../dummy/config/environment.rb", __FILE__)
+require 'rails'
 require "rails/test_help"
-require File.expand_path("../dummy/test/test_helper.rb", __FILE__)
-
-require 'minitest/unit'
 require 'mocha/minitest'
-
-# require "mocha/setup"
 
 Rails.backtrace_cleaner.remove_silencers!
 ExceptionNotifier.testing_mode!
 
-# require "minitest/autorun"
+require "minitest/autorun"

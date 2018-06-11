@@ -2,5 +2,5 @@ require 'logger'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'exception_notification'
-require "notifier/version"
-require "execption_notifier/exception_notifier_slack"
+require "exception_notifier_slack/version"
+require "exception_notifier_slack/core"
