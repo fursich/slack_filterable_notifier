@@ -1,4 +1,4 @@
-# ExceptionNotifierSlack
+# SlackFilterableNotifier
 a customizable slack notifier plug-in for exception_notfication
 
 ## Installation
@@ -6,7 +6,7 @@ a customizable slack notifier plug-in for exception_notfication
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'exception_notifier_slack'
+gem 'slack_filterable_notifier'
 ```
 
 And then execute:
@@ -15,7 +15,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install exception_notifier_slack
+    $ gem install slack_filterable_notifier
 
 ## Usage
 
@@ -29,7 +29,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/exception_notifier_slack.
+Bug reports and pull requests are welcome on GitHub at https://github.com/fursich/slack_filterable_notifier.
 
 ## License
 

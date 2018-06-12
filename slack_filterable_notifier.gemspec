@@ -1,16 +1,16 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'exception_notifier_slack/version'
+require 'slack_filterable_notifier/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "exception_notifier_slack"
-  spec.version       = ::ExceptionNotifierSlack::VERSION
+  spec.name          = "slack_filterable_notifier"
+  spec.version       = ::SlackFilterableNotifier::VERSION
   spec.authors       = ["Koji Onishi"]
   spec.email         = ["fursich0@gmail.com"]
 
   spec.summary       = %q{A customizable slack notifier for exception_notification.}
   spec.description   = %q{Can selectively silence, or simplify messages for specified types of exceptions, without changing 'global' execption_notification options.}
-  spec.homepage      = "https://github.com/fursich/exception_notifier_slack"
+  spec.homepage      = "https://github.com/fursich/slack_filterable_notifier"
   spec.license       = "MIT"
 
   # TODO remove when publisized

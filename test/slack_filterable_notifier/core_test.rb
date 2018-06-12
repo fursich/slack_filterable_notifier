@@ -16,16 +16,16 @@ class CoreTest < ActiveSupport::TestCase
     @ignored_exception.stubs(:message).returns('exception message')
   end
 
-  test 'should ignore certain exeptions when ignore_if option is given' do
+  test 'should ignore certain exeptions when ignored_exception option is given' do
     options = {
       webhook_url: "http://slack.webhook.url",
-      ignore_if: [:IgnoredException]
+      ignored_exception: [:IgnoredException]
     }
 
-    # Slack::Notifier.any_instance.expects(:ping).with('ss', fake_notification)
+    Slack::Notifier.any_instance.stubs(:ping).returns(true)
 
-    slack_notifier = ExceptionNotifier::ExceptionNotifierSlack.new(options)
-    assert_nil slack_notifier.call(@ignored_exception)
+    slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
+    refute slack_notifier.call(@ignored_exception)
   end
 
   test "should send a slack notification if properly configured" do
@@ -35,7 +35,7 @@ class CoreTest < ActiveSupport::TestCase
 
     Slack::Notifier.any_instance.expects(:ping).with('', fake_notification)
 
-    slack_notifier = ExceptionNotifier::ExceptionNotifierSlack.new(options)
+    slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
     slack_notifier.call(@exception)
   end
 
@@ -46,7 +46,7 @@ class CoreTest < ActiveSupport::TestCase
 
     Slack::Notifier.any_instance.expects(:ping).with('', fake_notification(fake_exception_without_backtrace))
 
-    slack_notifier = ExceptionNotifier::ExceptionNotifierSlack.new(options)
+    slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
     slack_notifier.call(fake_exception_without_backtrace)
   end
 
@@ -58,7 +58,7 @@ class CoreTest < ActiveSupport::TestCase
 
     Slack::Notifier.any_instance.expects(:ping).with('', fake_notification)
 
-    slack_notifier = ExceptionNotifier::ExceptionNotifierSlack.new(options)
+    slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
     slack_notifier.call(@exception)
 
     channel = slack_notifier.notifier.config.defaults[:channel]
@@ -73,7 +73,7 @@ class CoreTest < ActiveSupport::TestCase
 
     Slack::Notifier.any_instance.expects(:ping).with('', fake_notification)
 
-    slack_notifier = ExceptionNotifier::ExceptionNotifierSlack.new(options)
+    slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
     slack_notifier.call(@exception)
 
     username = slack_notifier.notifier.config.defaults[:username]
@@ -88,7 +88,7 @@ class CoreTest < ActiveSupport::TestCase
 
     Slack::Notifier.any_instance.expects(:ping).with('', fake_notification(@exception, {}, nil, 1))
 
-    slack_notifier = ExceptionNotifier::ExceptionNotifierSlack.new(options)
+    slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
     slack_notifier.call(@exception)
   end
 
@@ -101,7 +101,7 @@ class CoreTest < ActiveSupport::TestCase
 
     Slack::Notifier.any_instance.expects(:ping).with('', fake_notification(@exception, {}, nil, 10, [field]))
 
-    slack_notifier = ExceptionNotifier::ExceptionNotifierSlack.new(options)
+    slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
     slack_notifier.call(@exception)
 
     additional_fields = slack_notifier.notifier.config.defaults[:additional_fields]
@@ -120,14 +120,14 @@ class CoreTest < ActiveSupport::TestCase
 
     Slack::Notifier.any_instance.expects(:ping).with('', options[:additional_parameters].merge(fake_notification) )
 
-    slack_notifier = ExceptionNotifier::ExceptionNotifierSlack.new(options)
+    slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
     slack_notifier.call(@exception)
   end
 
   test "shouldn't send a slack notification if webhook url is missing" do
     options = {}
 
-    slack_notifier = ExceptionNotifier::ExceptionNotifierSlack.new(options)
+    slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
 
     assert_nil slack_notifier.notifier
     assert_nil slack_notifier.call(@exception)
@@ -155,7 +155,7 @@ class CoreTest < ActiveSupport::TestCase
     expected_data_string = "foo: bar\njohn: doe\nuser_id: 5"
 
     Slack::Notifier.any_instance.expects(:ping).with('', fake_notification(@exception, notification_options, expected_data_string))
-    slack_notifier = ExceptionNotifier::ExceptionNotifierSlack.new(options)
+    slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
     slack_notifier.call(@exception, notification_options)
   end
 
@@ -183,7 +183,7 @@ class CoreTest < ActiveSupport::TestCase
                                                          :color => 'danger'}
                                                      ]})
 
-    slack_notifier = ExceptionNotifier::ExceptionNotifierSlack.new(options)
+    slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
     slack_notifier.call(@exception)
     assert_equal(post_callback_called, 1)
   end

@@ -1,4 +1,4 @@
-require "exception_notifier_slack"
+require "slack_filterable_notifier"
 
 # begin
 #   require "coveralls"
