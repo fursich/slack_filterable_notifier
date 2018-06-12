@@ -9,16 +9,12 @@ a customizable slack notifier plug-in for exception_notfication
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'slack_filterable_notifier'
+gem 'slack_filterable_notifier', github: 'jiraffeinc/slack_filterable_notifier'
 ```
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install slack_filterable_notifier
 
 ## Usage
 
@@ -31,7 +27,7 @@ Rails.application.config.middleware.use ExceptionNotification::Rack,
   slack_filterable: {
     webhook_url: "[Your webhook url]",
     channel: "#exceptions",
-    skip_notifications_with: [ActionController::InvalidAuthenticityToken],
+    skip_notifications_with: [FooAPIError::SomeTrivialError, BarError::NotSoImportantException],
     simplify_notifications_with: [ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique],
     color_for_simplified_notifications: :warn,
     :
