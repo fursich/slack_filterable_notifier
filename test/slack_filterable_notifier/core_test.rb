@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'slack-notifier'
 
-class IgnoredException < StandardError; end
+class TrivialException < StandardError; end
 
 class CoreTest < ActiveSupport::TestCase
 
@@ -11,21 +11,31 @@ class CoreTest < ActiveSupport::TestCase
     @exception.stubs(:message).returns('exception message')
     Socket.stubs(:gethostname).returns('example.com')
 
-    @ignored_exception = ignored_exception
-    @ignored_exception.stubs(:backtrace).returns(fake_backtrace)
-    @ignored_exception.stubs(:message).returns('exception message')
+    @trivial_exception = trivial_exception
   end
 
-  test 'should ignore certain exeptions when ignored_exception option is given' do
+  test 'should ignore certain exeptions when skip_notifications option is given' do
     options = {
       webhook_url: "http://slack.webhook.url",
-      ignored_exception: [:IgnoredException]
+      skip_notifications_with: [:TrivialException]
     }
 
     Slack::Notifier.any_instance.stubs(:ping).returns(true)
 
     slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
-    refute slack_notifier.call(@ignored_exception)
+    refute slack_notifier.call(@trivial_exception)
+  end
+
+  test 'should ignore certain exeptions when simplify_notifications option is given' do
+    options = {
+      webhook_url: "http://slack.webhook.url",
+      simplify_notifications_with: [:TrivialException]
+    }
+
+    Slack::Notifier.any_instance.expects(:ping).with('', simplified_notification(trivial_exception))
+
+    slack_notifier = ExceptionNotifier::SlackFilterableNotifier.new(options)
+    assert slack_notifier.call(@trivial_exception)
   end
 
   test "should send a slack notification if properly configured" do
@@ -198,9 +208,9 @@ class CoreTest < ActiveSupport::TestCase
     end
   end
 
-  def ignored_exception
+  def trivial_exception
     begin
-      raise IgnoredException.new
+      raise TrivialException.new('a trivial error')
     rescue => e
       e
     end
@@ -247,6 +257,30 @@ class CoreTest < ActiveSupport::TestCase
     additional_fields.each { |f| fields.push(f) }
 
     { attachments: [ color: 'danger', text: text, fields: fields, mrkdwn_in: %w(text fields) ] }
+  end
+
+  def simplified_notification(exception = @exception, notification_options = {})
+    exception_name = "*#{exception.class.to_s =~ /^[aeiou]/i ? 'An' : 'A'}* `#{exception.class.to_s}`"
+
+    prefix = '[simplified report] '
+    if notification_options[:env].nil?
+      text = prefix + "#{exception_name} *occured in background*"
+    else
+      env = notification_options[:env]
+
+      kontroller = env['action_controller.instance']
+      request = "#{env['REQUEST_METHOD']} <#{env['REQUEST_URI']}>"
+
+      text = prefix + "#{exception_name} *occurred while* `#{request}`"
+      text += " *was processed by* `#{kontroller.controller_name}##{kontroller.action_name}`" if kontroller
+    end
+
+    text += "\n"
+
+    fields = [ { title: 'Exception', value: exception.message} ]
+    fields.push({ title: 'Hostname', value: 'example.com' })
+
+    { attachments: [ color: 'good', text: text, fields: fields, mrkdwn_in: %w(text fields) ] }
   end
 
 end
