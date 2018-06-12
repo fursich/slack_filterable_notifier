@@ -4,3 +4,4 @@ require 'active_support/core_ext/module/attribute_accessors'
 require 'exception_notification'
 require "slack_filterable_notifier/version"
 require "slack_filterable_notifier/core"
+require "slack-notifier"
