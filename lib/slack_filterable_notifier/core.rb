@@ -2,8 +2,6 @@ module ExceptionNotifier
   class SlackFilterableNotifier < SlackNotifier
     include ExceptionNotifier::BacktraceCleaner
 
-    attr_accessor :notifier
-
     # uniquely with slack notifier
     attr_accessor :skipped_exceptions, :simplified_exceptions, :color_for_simplified
     COLOR_FOR_SIMPIFIED_NOTIFICATION = 'good'
@@ -28,7 +26,7 @@ module ExceptionNotifier
 
         if valid?
           send_notice(exception, options, clean_message, attachments: attchs) do |msg, message_opts|
-            @notifier.ping '', message_opts
+            notifier.ping '', message_opts
           end
           return true
         else
