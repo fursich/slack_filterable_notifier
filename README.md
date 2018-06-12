@@ -55,6 +55,7 @@ Upper-compatible with the original slack notifier with exception_notification ge
 slack_filterable_notifier is build upon the below rubygems (great thanks for the original creators/maintainers), all of which gets installed automatically when you bundle install.
 
 [exception_notification](https://github.com/smartinez87/exception_notification)
+
 [slack-notifier](https://github.com/stevenosloan/slack-notifier)
 
 ## Todo
