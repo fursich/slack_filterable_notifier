@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/fursich/slack_filterable_notifier.svg?branch=master)](https://travis-ci.org/fursich/slack_filterable_notifier)
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+
 # SlackFilterableNotifier
 a customizable slack notifier plug-in for exception_notfication
 
