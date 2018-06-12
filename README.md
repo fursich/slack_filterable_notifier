@@ -19,7 +19,49 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Specify `slack_filterable` instead of `slack` option for the exception_notfication.
+
+Basically you need to set at least the 'webhook_url' option to configure:
+
+```ruby
+Rails.application.config.middleware.use ExceptionNotification::Rack,
+  slack_filterable: {
+    webhook_url: "[Your webhook url]",
+    channel: "#exceptions",
+    skip_notifications_with: [ActionController::InvalidAuthenticityToken],
+    simplify_notifications_with: [ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique],
+    color_for_simplified_notifications: :warn,
+    :
+  }
+```
+
+The slack_filterable_notifier uniquely provides the last three options shown above:
+
+- skip_notifications_with
+  - exceptions to be skipped with no notifications at all (behaves like 'ignore' option, but **works with only slack notifier**)
+
+- simplify_notifications_with
+  - exceptions to be notified with simple format
+  - displays Title, Exception, Hostname columns only
+
+- color_for_simplified_notifications
+  - pick a color from :good, :warning, :danger, or any hex color code (eg. #439FE0)
+
+Upper-compatible with the original slack notifier with exception_notification gem, meaning ANY options that are accepted by the exception_notfication is available.
+(see also [the original repo](https://github.com/smartinez87/exception_notification#slack-notifier) for the details)
+
+## Dependencies
+
+slack_filterable_notifier is build upon the below rubygems (great thanks for the original creators/maintainers), all of which gets installed automatically when you bundle install.
+
+[exception_notification](https://github.com/smartinez87/exception_notification)
+[slack-notifier](https://github.com/stevenosloan/slack-notifier)
+
+## Todo
+
+Currently not actively publicized at rubygems as I consider it to be a good potential option to have it merged into the original exception_notification.
+This is package as it is for the sake of quick use, but we will see how the PR to the original master goes.
+Test are all written in minitests so as to make the merge easier.
 
 ## Development
 
