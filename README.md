@@ -34,7 +34,7 @@ Rails.application.config.middleware.use ExceptionNotification::Rack,
   }
 ```
 
-The slack_filterable_notifier uniquely provides the last three options shown above:
+The last three options are introduced by slack_filterable_notifier to configure notification levels:
 
 - skip_notifications_with
   - exceptions to be skipped with no notifications at all (behaves like 'ignore' option, but **works with only slack notifier**)
