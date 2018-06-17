@@ -7,10 +7,10 @@ module ExceptionNotifier
     COLOR_FOR_SIMPIFIED_NOTIFICATION = 'good'
 
     def initialize(options)
+      @skipped_exceptions    = options.delete(:skip_notifications_with)
+      @simplified_exceptions = options.delete(:simplify_notifications_with)
+      @color_for_simplified  = options.delete(:color_for_simplified_notifications) { COLOR_FOR_SIMPIFIED_NOTIFICATION }
       super
-      @skipped_exceptions    = options[:skip_notifications_with]
-      @simplified_exceptions = options[:simplify_notifications_with]
-      @color_for_simplified  = options[:color_for_simplified_notifications] || COLOR_FOR_SIMPIFIED_NOTIFICATION
     end
 
     def call(exception, options={})
